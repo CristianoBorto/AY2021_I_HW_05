@@ -16,7 +16,7 @@
 
 #define DEVICE_ADDRESS 0x18
 #define STATUS_REG 0x27
-#define CTRL_REG4_SET_HR 0x08
+#define CTRL_REG4_SET_HR_AND_BDU 0x88 //set BDU e HR
 
 #define CTRL_REG1 0x20
 #define CTRL_REG4 0x23
@@ -28,77 +28,125 @@
 #define LIS3DH_OUT_Z_L 0x2C
 #define LIS3DH_OUT_Z_H 0x2D
 
+// ci sarà poi da fare il controllo con il bottone per la frequenza
 #define FREQ_INIT 0x57
 
+//packet parameters
+#define BYTE_TO_SEND 6
+#define BUFFER_SIZE 1+BYTE_TO_SEND+1
+
+#define M_digit_TO_MS2 2000*9.81/2047
+#define Q_digit_To_MS2 M_digit_TO_MS2*4095 
 
 int main(void)
 {
-//    CyGlobalIntEnable; 
+    CyGlobalIntEnable; 
 //    isr_Button_StartEx(Custom_ISR_Button);
     UART_Start();
-    //PWM_Start();
+    PWM_Start();
     I2C_Start();
+    
     char message[50] = {'\0'};
+    ErrorCode error;
+    uint8_t DataBuffer [BUFFER_SIZE]; //Packet statement
+    
+    uint8_t Acc_X[2];
+    uint8_t Acc_Y[2];
+    uint8_t Acc_Z[2];
+    int16 A_X;
+    int16 A_Y;
+    int16 A_Z;
+    float A_X_Conv;
+    float A_Y_Conv;
+    float A_Z_Conv;
+    
+    
+    
+    
+    //packet header and tail setting
+    DataBuffer [0] = 0xA0;
+    DataBuffer [BUFFER_SIZE-1] = 0xC0;
+    
     
     CyDelay(5);
-
-    uint8_t ctrl_reg4=0; 
-    ErrorCode error = I2C_ReadRegister(DEVICE_ADDRESS,
-                                       CTRL_REG4,
-                                       &ctrl_reg4);
-    
-    if (error == NO_ERROR)
-    {
-        sprintf(message, "CONTROL REGISTER 4: 0x%02X\r\n", ctrl_reg4);
-        UART_PutString(message); 
-    }
-    else
-    {
-        UART_PutString("Error occurred during I2C comm to read control register 1\r\n");   
-    }
-    
-    if (ctrl_reg4 != CTRL_REG4_SET_HR)
-    {
-        UART_PutString("\r\nWriting new values..\r\n");
-        ctrl_reg4 = CTRL_REG4_SET_HR;
-    
-        error = I2C_WriteRegister(DEVICE_ADDRESS,
-                                  CTRL_REG4,
-                                  ctrl_reg4);
-    
-        if (error == NO_ERROR)
-        {
-            sprintf(message, "CONTROL REGISTER 4 successfully written as: 0x%02X\r\n", ctrl_reg4);
-            UART_PutString(message); 
-        }
-        else
-        {
-            UART_PutString("Error occurred during I2C comm to set control register 1\r\n");   
-        }
-    }
-    
+     
+    error = I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG4, CTRL_REG4_SET_HR_AND_BDU);
     // set frequency
-     error = I2C_WriteRegister(DEVICE_ADDRESS,
-                               CTRL_REG1,
-                               FREQ_INIT);
-    
-        if (error == NO_ERROR)
-        {
-            sprintf(message, "CONTROL REGISTER 1 successfully written as: 0x%02X\r\n", FREQ_INIT);
-            UART_PutString(message); 
-        }
-        else
-        {
-            UART_PutString("Error occurred during I2C comm to set control register 1\r\n");   
-        }
-    
-    
-    
-    
+    error = I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG1, FREQ_INIT);
+      
     while(1)
     {
-        /* Place your application code here. */
-    }
+        error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_X_L, &Acc_X[0]);
+        if (error == NO_ERROR)
+        {
+            error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_X_H, &Acc_X[1]);
+            if (error == NO_ERROR)
+            {
+                error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_Y_L, &Acc_Y[0]);
+                if (error == NO_ERROR)
+                {
+                    error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_Y_H, &Acc_Y[1]);
+                    if (error == NO_ERROR)
+                    {
+                        error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_Z_L, &Acc_Z[0]);
+                        if (error == NO_ERROR)
+                        {
+                            error = I2C_ReadRegister(DEVICE_ADDRESS, LIS3DH_OUT_Y_H, &Acc_Z[1]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (error == NO_ERROR)
+        {
+            A_X = (int16)((Acc_X[0] | (Acc_X[1]<<8)))>>4;
+            A_Y = (int16)((Acc_Y[0] | (Acc_Y[1]<<8)))>>4;
+            A_Z = (int16)((Acc_Z[0] | (Acc_Z[1]<<8)))>>4;
+            
+            if (A_X >= 0 && A_X <=2047) 
+            {
+                A_X_Conv = (A_X*M_digit_TO_MS2)*1000;     
+            }
+            else 
+            {
+                A_X_Conv = (A_X*M_digit_TO_MS2 - Q_digit_To_MS2)*1000;
+            }
+            
+            A_X = (int16)(A_X_Conv);
+            DataBuffer[1] = A_X & 0xFF;
+            DataBuffer[2] = A_X >> 8;
+            
+            if (A_Y >= 0 && A_Y <=2047) 
+            {
+                A_Y_Conv = (A_Y*M_digit_TO_MS2)*1000;     
+            }
+            else 
+            {
+                A_Y_Conv = (A_Y*M_digit_TO_MS2 - Q_digit_To_MS2)*1000;
+            }
+            
+            A_Y = (int16)(A_Y_Conv);
+            DataBuffer[3] = A_Y & 0xFF;
+            DataBuffer[4] = A_Y >> 8;
+            
+            if (A_Z >= 0 && A_Z <=2047) 
+            {
+                A_Z_Conv = (A_Z*M_digit_TO_MS2)*1000;     
+            }
+            else 
+            {
+                A_Z_Conv = (A_Z*M_digit_TO_MS2 - Q_digit_To_MS2)*1000;
+            }
+            
+            A_Z = (int16)(A_Z_Conv);
+            DataBuffer[5] = (uint8_t)(A_Z & 0xFF);
+            DataBuffer[6] = (uint8_t)(A_Z >> 8);
+            
+            
+            UART_PutArray(DataBuffer,BUFFER_SIZE);
+        }
+    }     
 }
 
 /* [] END OF FILE */

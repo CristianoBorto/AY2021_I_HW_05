@@ -12,9 +12,7 @@
 
 #include "MyFunction.h"
      
-ErrorCode I2C_ReadRegister(uint8_t device_address, 
-                           uint8_t register_address,
-                           uint8_t* data)
+ErrorCode I2C_ReadRegister(uint8_t device_address, uint8_t register_address, uint8_t* data)
     {
         // Send start condition
         uint8_t error = I2C_MasterSendStart(device_address,I2C_WRITE_XFER_MODE);
