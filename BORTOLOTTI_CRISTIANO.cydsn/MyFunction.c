@@ -59,4 +59,15 @@ ErrorCode I2C_WriteRegister(uint8_t device_address,
         return error ? ERROR : NO_ERROR;
     }
 
+void Set_PWM(uint16 period)
+{
+    PWM_WritePeriod(period);
+    PWM_WriteCompare(period/2);
+    
+}
+    
+    
+    
+    
+    
 /* [] END OF FILE */

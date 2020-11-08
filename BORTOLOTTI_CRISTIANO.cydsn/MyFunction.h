@@ -26,7 +26,8 @@
     ErrorCode I2C_WriteRegister(uint8_t device_address,
                                 uint8_t register_address,
                                 uint8_t data);
-  
+    void Set_PWM(uint16 period);
+    
 #endif
 
 /* [] END OF FILE */
