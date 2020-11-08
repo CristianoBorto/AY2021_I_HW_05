@@ -11,10 +11,6 @@
 */
 
 #include "MyISR.h"
-#include "MyFunction.h"
-
-ErrorCode error;
-uint8 freq;
 
 CY_ISR (Custom_ISR_Button)
 {
