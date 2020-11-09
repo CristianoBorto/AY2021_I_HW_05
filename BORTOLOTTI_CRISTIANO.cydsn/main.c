@@ -56,7 +56,7 @@ int main(void)
                 }
                 else 
                 {
-                    UART_PutString("Failed output readings\r\n"); 
+                    //UART_PutString("Failed output readings\r\n"); 
                     flag_error = FALSE;
                 }
             }

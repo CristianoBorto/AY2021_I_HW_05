@@ -178,37 +178,11 @@ A_array XYZ_Reading (void)
                         {
                              return array;
                         }
-                        else //"else" refered to the sixth "if"
-                        {
-                            UART_PutString("Error in reading OUT_Z_H\r\n"); 
-                        }
-                        
-                    }
-                    else //"else" refered to the fifth "if"
-                    {
-                        UART_PutString("Error in reading OUT_Z_L\r\n"); 
                     }
                 }
-                else //"else" refered to the fourth "if"
-                {
-                    UART_PutString("Error in reading OUT_Y_H\r\n"); 
-                }
-            }
-            else //"else" refered to the third "if"
-            {
-                UART_PutString("Error in reading OUT_Y_L\r\n"); 
             }
         }
-        else //"else" refered to the second "if"
-        {
-            UART_PutString("Error in reading OUT_X_H\r\n"); 
-        }
     }
-    else //"else" refered to the first "if"
-    {
-        UART_PutString("Error in reading OUT_X_L\r\n"); 
-    }
-    
     flag_error = 1;
     return array;
 }
