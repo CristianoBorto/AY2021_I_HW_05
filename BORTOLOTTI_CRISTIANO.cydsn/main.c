@@ -34,10 +34,10 @@ int main(void)
     uint8_t freq;
 
     //set ctrl_reg4 --> High Resolution + Block Data Update
-    Set_Ctrl_Reg4();
+    error = I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG4, CTRL_REG4_SET_HR_AND_BDU);
     // set frequency
     freq = freq_from_memory(); //get frequency from memory
-    Set_Ctrl_Reg1(freq);
+    error= I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG1, freq);
     // interrupt setting
     Start_Interrupt();
     
@@ -46,7 +46,7 @@ int main(void)
         if (Button_flag == FALSE)
         {
             error = I2C_ReadRegister(DEVICE_ADDRESS, STATUS_REG, &status_reg);
-            if ( (status_reg & STATUS_REG_SET_ZYXDA) && (error == NO_ERROR) )
+            if (status_reg & STATUS_REG_SET_ZYXDA)
             {
                 Acc = XYZ_Reading();
                 if (flag_error == FALSE)

@@ -16,7 +16,6 @@ CY_ISR (Custom_ISR_Button)
 {
     Button_flag = 1;
     count++;
- 
 }
 
 /* [] END OF FILE */

@@ -60,8 +60,6 @@
     
     void Start_Interrupt(void);
     
-    uint8_t Read_Status_Reg(void);
-    
     A_array XYZ_Reading(void);
     
     A_int XYZ_Elaboration(A_array array);

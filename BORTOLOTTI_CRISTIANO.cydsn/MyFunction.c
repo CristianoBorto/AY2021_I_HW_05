@@ -95,7 +95,7 @@ void Set_Ctrl_Reg4(void)
 
 void Set_Ctrl_Reg1(uint8_t frequency)
 {
-    error_message = I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG4, frequency);
+    error_message = I2C_WriteRegister(DEVICE_ADDRESS, CTRL_REG1, frequency);
     if (error_message == NO_ERROR)
         {
             sprintf(message, "CONTROL REGISTER 1 successfully written as: 0x%02X\r\n", frequency);
@@ -151,22 +151,6 @@ void Start_Interrupt(void)
 {
     CyGlobalIntEnable; 
     isr_Button_StartEx(Custom_ISR_Button);
-}
-
-uint8_t Read_Status_Reg(void)
-{
-    uint8_t mask;
-    error_message = I2C_ReadRegister(DEVICE_ADDRESS, STATUS_REG, &mask);
-    if (error_message == NO_ERROR)
-        {
-            sprintf(message, "STATUS REGISTER successfully checked as: 0x%02X\r\n", mask);
-            UART_PutString(message); 
-        }
-        else
-        {
-            UART_PutString("Error occurred during status register check\r\n");   
-        }
-    return mask;
 }
 
 A_array XYZ_Reading (void)
