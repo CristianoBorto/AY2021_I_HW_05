@@ -13,6 +13,11 @@
 #ifndef DEFINES_H
     #define DEFINES_H
     
+    #include "project.h"
+    
+    #define TRUE 1
+    #define FALSE 0
+    
     #define DEVICE_ADDRESS 0x18 
     
     //registers address
@@ -46,13 +51,36 @@
     //EEPROM address where the frequency is saved
     #define FREQ_MEMORY_ADDRESS 0x0000
     
-    // set of define for PWM setting
+    // set of define for PWM setting as described in the TopDesign
     #define PERIOD_FREQ_1 15000
     #define PERIOD_FREQ_10 12500
     #define PERIOD_FREQ_25 10000
     #define PERIOD_FREQ_50 7500
     #define PERIOD_FREQ_100 5000
     #define PERIOD_FREQ_200 2500
+    
+    typedef enum { // enum variable used to define erorrs
+        NO_ERROR,           
+        ERROR               
+    } ErrorCode;
+
+    typedef struct { // struct of array used to save data read from axis registers
+        uint8 X[2];
+        uint8_t Y[2];
+        uint8_t Z[2];
+    } A_array;
+
+    typedef struct { // struct of int variable used for X,Y,Z data
+        int16 X;
+        int16 Y;
+        int16 Z;
+    } A_int;
+    
+    typedef struct { // struct of float variable used as support to perform elaboration
+        float X;
+        float Y;
+        float Z;
+    } A_float;
     
 #endif
 

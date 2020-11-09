@@ -13,33 +13,13 @@
 #ifndef __ERRORCODES_H
     #define __ERRORCODES_H
     
-    #include "MyISR.h"
     #include "Defines.h"
+    CY_ISR_PROTO (Custom_ISR_Button);
     
-    typedef enum {
-        NO_ERROR,           ///< No error generated
-        ERROR               ///< Error generated
-    } ErrorCode;
-
-    typedef struct {
-        uint8 X[2];
-        uint8_t Y[2];
-        uint8_t Z[2];
-    } A_array;
-
-    typedef struct {
-        int16 X;
-        int16 Y;
-        int16 Z;
-    } A_int;
-    
-    typedef struct {
-        float X;
-        float Y;
-        float Z;
-    } A_float;
-    
-    uint8 flag_error;
+    uint8 count;
+    uint8 Button_flag;
+    uint8 Error_flag;
+    uint8 Setting_flag;
     uint8_t DataBuffer [BUFFER_SIZE]; //Packet statement
         
     ErrorCode I2C_ReadRegister(uint8_t device_address, 
