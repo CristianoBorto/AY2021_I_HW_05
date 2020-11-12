@@ -1,11 +1,8 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * Author: Cristiano Bortolotti
+ * File: MyFunction.h
+ * Date: 04/11/20 - 14/11/20
  *
  * ========================================
 */
@@ -16,18 +13,20 @@
     #include "Defines.h"
     CY_ISR_PROTO (Custom_ISR_Button);
     
+    //global variable statement
     uint8 count;
     uint8 Button_flag;
     uint8 Error_flag;
     uint8 Setting_flag;
-    uint8_t DataBuffer [BUFFER_SIZE]; //Packet statement
-        
-    ErrorCode I2C_ReadRegister(uint8_t device_address, 
-                               uint8_t register_address,
-                               uint8_t* data);
-    ErrorCode I2C_WriteRegister(uint8_t device_address,
-                                uint8_t register_address,
-                                uint8_t data);
+    
+    //Packet statement
+    uint8_t DataBuffer [BUFFER_SIZE]; 
+    
+    //functions declaration
+    ErrorCode I2C_ReadRegister(uint8_t device_address, uint8_t register_address, uint8_t* data);
+    
+    ErrorCode I2C_WriteRegister(uint8_t device_address, uint8_t register_address, uint8_t data);
+    
     void Set_PWM(uint16 period);
   
     void Start_Peripherals(void);

@@ -1,11 +1,8 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * Author: Cristiano Bortolotti
+ * File: MyFunction.c
+ * Date: 04/11/20 - 14/11/20
  *
  * ========================================
 */
@@ -15,12 +12,16 @@
 
 ErrorCode error_message;
 char message[50] = {'\0'};
-    
+
+//ISR definition
+
 CY_ISR (Custom_ISR_Button) //ISR
 {
     Button_flag = TRUE;
     count++;
 }
+
+// Functions definition (sorted as they are declared)
 
 ErrorCode I2C_ReadRegister(uint8_t device_address, uint8_t register_address, uint8_t* data)
     {
@@ -133,7 +134,7 @@ uint8_t freq_from_memory (void) //reading of freq from memory, then with respect
             Set_PWM(PERIOD_FREQ_200);
             count = 5;
             break;
-        default:
+        default: //for the very first programming, when we don't know what the memory address contain, we set the sampling freq=1 Hz
             EEPROM_UpdateTemperature();
             EEPROM_WriteByte(FREQ_1,FREQ_MEMORY_ADDRESS);
             Set_PWM(PERIOD_FREQ_1); 
@@ -180,7 +181,7 @@ A_array XYZ_Reading (void)
         }
     }
     
-    Error_flag = 1;
+    Error_flag = TRUE;
     return array;
 }
 
@@ -222,7 +223,7 @@ void XYZ_Sending(A_int value)
 void Freq_1_to_200(uint8_t frequency)
 {
     Set_PWM(PERIOD_FREQ_1 - 2500*count);
-    frequency = EEPROM_ReadByte(FREQ_MEMORY_ADDRESS) + 0x10;
+    frequency = EEPROM_ReadByte(FREQ_MEMORY_ADDRESS) + FREQ_INCREMENT;
     EEPROM_UpdateTemperature();
     EEPROM_WriteByte(frequency, FREQ_MEMORY_ADDRESS);
     Set_Ctrl_Reg1(frequency);

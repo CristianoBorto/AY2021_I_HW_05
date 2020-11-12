@@ -1,11 +1,8 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * Author: Cristiano Bortolotti
+ * File: main.c
+ * Date: 04/11/20 - 14/11/20
  *
  * ========================================
 */
@@ -25,6 +22,7 @@ int main(void)
     DataBuffer [0] = 0xA0;
     DataBuffer [BUFFER_SIZE-1] = 0xC0;   
     
+    // variable declaration
     ErrorCode error;
     A_array Acc; //support variable to save data read from data registers
     A_int Output;
@@ -41,7 +39,7 @@ int main(void)
     
     while(1)
     {
-        if (Setting_flag == FALSE) //if true the setting is correctly occured
+        if (Setting_flag == FALSE) //if the flag was true, the setting would be uncorrectly occured
         {
             if (Button_flag == FALSE) //button not pressed
             {
@@ -60,7 +58,8 @@ int main(void)
                     }
                 }
             }
-            if (Button_flag == TRUE)
+            
+            if (Button_flag == TRUE) //change sampling frequency when button is pressed
             {
                 Button_flag = FALSE;
                 if (count < 6)

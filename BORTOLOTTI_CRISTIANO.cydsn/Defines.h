@@ -1,11 +1,8 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * Author: Cristiano Bortolotti
+ * File: Defines.h
+ * Date: 04/11/20 - 14/11/20
  *
  * ========================================
 */
@@ -40,6 +37,7 @@
     #define FREQ_50   0x47
     #define FREQ_100  0x57
     #define FREQ_200  0x67
+    #define FREQ_INCREMENT 0x10
     
     //packet parameters
     #define BYTE_TO_SEND 6
